@@ -1,0 +1,48 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.PlayerGUI;
+import model.SimplePlayer;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+
+public class AddPlayerAction implements ActionListener {
+	private MainFrame view;
+	private GameEngine model;
+	private int ID = 0;
+	
+	public AddPlayerAction(GameEngine model, MainFrame view) {
+		this.view = view;
+		this.model = model;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+//			String playerName = JOptionPane.showInputDialog(view, "Player name", "Add Player", JOptionPane.QUESTION_MESSAGE);
+//			int point = Integer.parseInt(JOptionPane.showInputDialog(view, "Player Score", "Add Player", JOptionPane.QUESTION_MESSAGE));
+			
+			JTextField playerName = new JTextField();
+			JTextField points = new JTextField();
+			Object[] inputFields = {"Please set your name: ", playerName, "Please set your point: ", points};
+			
+			JOptionPane.showConfirmDialog(null, inputFields, JOptionPane.CANCEL_OPTION);
+			
+			String playerID = String.valueOf(ID++);
+			Player thisPlayer = new PlayerGUI(playerID, playerName, points);
+			model.addPlayer(thisPlayer);
+			view.getSummaryPanel().updateAllPlayers();
+			view.getToolBar().updateAllPlayers();
+			
+		} catch (Exception err) {
+			JOptionPane.showMessageDialog(view, "Player is not added", "Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(err);
+		}
+	} 
+
+}

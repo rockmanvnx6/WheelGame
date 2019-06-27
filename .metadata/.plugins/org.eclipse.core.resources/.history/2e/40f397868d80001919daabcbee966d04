@@ -1,0 +1,56 @@
+package controller;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.enumeration.BetType;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+import view.ToolBar;
+
+public class BetAction implements ActionListener{
+	private GameEngine model;
+	private MainFrame view;
+	
+	public BetAction(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			JButton source = (JButton)e.getSource();
+			ToolBar toolBar = (ToolBar) source.getParent();
+			
+			BetType[] betTypes = BetType.class.getEnumConstants();
+			
+			Player currentPlayer = toolBar.getCurrentPlayer();
+			
+			if(view.getPopupPanel().addBet(betTypes) == JOptionPane.OK_OPTION) {
+				if(model.placeBet(currentPlayer, view.getPopupPanel().getBet(), view.getPopupPanel().getSelectedBet()) == false) {
+					throw new Exception();
+				} else {
+					view.getPopupPanel().showSuccessfulMessage("Successfully placed bet for " + currentPlayer.getPlayerName());
+				}
+			} else {
+				JOptionPane.showMessageDialog(view, "Cancelled set bet action");
+			}
+			
+			view.getSummaryPanel().updateAllPlayers();
+			view.getToolBar().updateAllPlayers();
+			view.getStatusBar().updateCurrentPlayer();
+			
+		} catch (Exception err) {
+			JOptionPane.showMessageDialog(view, "Cannot place bet", "Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(err);
+		}
+	}
+	
+}

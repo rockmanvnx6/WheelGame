@@ -1,0 +1,19 @@
+package view;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class PlayerPanel extends JPanel{
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private Player player;
+	public PlayerPanel(Player player) {
+		this.player = player;
+	}
+
+}

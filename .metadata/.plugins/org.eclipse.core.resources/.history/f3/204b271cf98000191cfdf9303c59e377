@@ -1,0 +1,76 @@
+package view;
+
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.enumeration.BetType;
+import model.interfaces.Player;
+
+
+public class PopupPanel extends JOptionPane {
+	private MainFrame view;
+	private JTextField playerName;
+	private JTextField points;
+	private JTextField bet;
+	private JComboBox<BetType> typeSelector;
+	private static final long serialVersionUID = 1L;
+	
+	public PopupPanel(MainFrame view) {
+		this.view = view;
+	}
+	
+	public Player removePlayer(Object[] playerList) {
+		return this.showDialog("Select a player to remove", "Remove player", playerList);
+	}
+	
+	public int addBet(BetType[] betTypes) {
+		bet = new JTextField();
+		typeSelector = new JComboBox<BetType>();
+		for(BetType betType : betTypes) {
+			typeSelector.addItem(betType);
+		}
+		Object[] inputFields = {"Please input amount of bet: ", bet, "Please select bet type: ", typeSelector};
+		return this.showDialog(inputFields);
+	}
+	public int addPlayer() {
+		playerName = new JTextField();
+		points = new JTextField();
+		Object[] inputFields = {"Please set your name: ", playerName, "Please set your point: ", points};
+		return this.showDialog(inputFields);
+	}
+	public int getBet() {
+		return Integer.parseInt(bet.getText());
+	}
+	
+	public BetType getSelectedBet() {
+		return (BetType) typeSelector.getSelectedItem();
+	}
+	
+	public String getPlayerName() {
+		return playerName.getText();
+	}
+	
+	public Object showInputDialog(String message, String title, Object itemList) {
+		return (Object) super.showInputDialog(view, message, title, JOptionPane.PLAIN_MESSAGE, null, itemList, null);
+	}
+	
+	public int getPoints() {
+		return Integer.parseInt(points.getText());
+	}
+	
+	public int showDialog(Object[] information) {
+		return super.showConfirmDialog(view,information);
+	}
+	
+	@SuppressWarnings("static-access")
+	public void showSuccessfulMessage(String message) {
+		super.showMessageDialog(view, message, "Success", super.INFORMATION_MESSAGE);
+	}
+	
+	@SuppressWarnings("static-access")
+	public void showErrorMessage(String message) {
+		super.showMessageDialog(view, message, "Error", super.ERROR_MESSAGE);
+	}
+
+}

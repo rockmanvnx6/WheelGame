@@ -1,0 +1,67 @@
+package controller;
+
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.enumeration.BetType;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+import view.ToolBar;
+
+public class BetAction implements ActionListener{
+	private GameEngine model;
+	private MainFrame view;
+	
+	public BetAction(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			JButton source = (JButton)e.getSource();
+			ToolBar toolBar = (ToolBar) source.getParent();
+			
+			BetType[] betTypes = BetType.class.getEnumConstants();
+//			int bet = Integer.parseInt(JOptionPane.showInputDialog(view, "Amount of points to bet",
+//					"Add bet", JOptionPane.QUESTION_MESSAGE));
+			JTextField bet = new JTextField();
+			JComboBox<BetType> typeSelector = new JComboBox<BetType>();
+			for(BetType betType : betTypes) {
+				typeSelector.addItem(betType);
+			}
+			
+//			BetType selectedType = (BetType) JOptionPane.showInputDialog(view, "Select bet type", "Select bet type",
+//					JOptionPane.PLAIN_MESSAGE, null, betTypes, null);
+//
+			Player currentPlayer = toolBar.getCurrentPlayer();
+
+			Object[] inputFields = {"Please input amount of bet: ", bet, "Please select bet type: ", typeSelector};
+			int selection = JOptionPane.showConfirmDialog(view, inputFields);
+			if(selection == JOptionPane.OK_OPTION) {
+				if(model.placeBet(currentPlayer, Integer.parseInt(bet.getText()), (BetType)typeSelector.getSelectedItem()) == false) {
+					throw new Exception();
+				} else {
+					JOptionPane.showMessageDialog(view, "Successfully placed bet for " + currentPlayer.getPlayerName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(view, "Cancelled set bet action");
+			}
+			view.getSummaryPanel().updateAllPlayers();
+			view.getToolBar().updateAllPlayers();
+			view.getStatusBar().updateCurrentPlayer();
+			
+		} catch (Exception err) {
+			JOptionPane.showMessageDialog(view, "Cannot place bet", "Error", JOptionPane.ERROR_MESSAGE);
+			System.out.println(err);
+		}
+	}
+	
+}

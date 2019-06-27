@@ -1,0 +1,85 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
+import model.enumeration.BetType;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+import view.PopupPanel;
+
+public class BetAction implements ActionListener {
+	/*
+	 * This class is in charged of adding bet for a player.
+	 * It will pass information of player's bet to model, as well as
+	 * tell summary panel, tool bar and status bar to update. 
+	 */
+	private GameEngine model;
+	private MainFrame view;
+
+	public BetAction(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+	}
+
+	
+	public void updateViews() {
+		view.getSummaryPanel().updateAllPlayers();
+		view.getToolBar().updateAllPlayers();
+	}
+	
+	public boolean checkPlayersAddBet() {
+		/* 
+		 * This function will return true if all players has added bet,
+		 * false otherwise.
+		 * 
+		 * Is used to auto-trigger the spin function when every one has placed
+		 * their bets.
+		 */
+		for (Player player : model.getAllPlayers()) {
+			if (player.getBet() <= 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		/* 
+		 * Can be triggered from the bet button from tool bar.
+		 * First it will get the current selected player, and then call the game engine 
+		 * to place bet for that player.
+		 * 
+		 * If success then show a successful message, otherwise, show an error message.
+		 * 
+		 * Then it will update the summary panel, tool bar and status bar.
+		 */
+		PopupPanel popup = view.getPopupPanel();
+		try {
+			BetType[] betTypes = BetType.class.getEnumConstants();
+			Player currentPlayer = view.getToolBar().getCurrentPlayer();
+			
+			if (popup.addBet(betTypes) == JOptionPane.OK_OPTION) {
+				if (model.placeBet(currentPlayer, popup.getBet(), popup.getSelectedBet()) == false) {
+					// If cannot place bet for any reasons.
+					throw new Exception();
+				} else {
+					// Update status bar and show pop up feedback.
+					popup.showSuccessfulMessage("Successfully placed bet for " + currentPlayer.getPlayerName());
+					view.getStatusBar().showMessage(String.format("%s has placed %s on %s.", 
+							currentPlayer.getPlayerName(), popup.getBet(), popup.getSelectedBet()));
+					updateViews();
+				}
+			} else {
+				popup.showErrorMessage("Cancelled set bet action.");
+			}
+		} catch (Exception err) {
+			popup.showErrorMessage("Invalid bet input, cannot place bet.");
+		}
+		
+	}
+	
+}

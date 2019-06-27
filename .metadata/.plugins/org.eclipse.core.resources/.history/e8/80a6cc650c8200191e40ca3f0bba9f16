@@ -1,0 +1,82 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.ComboWrapper;
+import view.MainFrame;
+import view.PopupPanel;
+
+public class RemovePlayerAction implements ActionListener {
+	/*
+	 * This class's job is to remove a player from GameEngine,
+	 * It will get all the current players from our GameEngine, pass it back
+	 * to the pop up class for display purpose.
+	 * 
+	 * After user selects which player he/she wants to remove, the selected player
+	 * is then passed back to this class, and it will call the model to remove
+	 * that selected player.
+	 */
+	private MainFrame view;
+	private GameEngine model;
+	
+	public RemovePlayerAction(GameEngine model, MainFrame view) {
+		this.view = view;
+		this.model = model;
+	}
+	
+	private Object[] append(Object[] obj, ComboWrapper newValue) {
+		/* 
+		 * Append a ComboWrapper to an object, and return the array of object.
+		 */
+		ArrayList<Object> temp = new ArrayList<Object>(Arrays.asList(obj));
+		temp.add(newValue);
+		return temp.toArray();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		/*
+		 * This method is triggered by "Remove Player" from "Action" menu.
+		 * 
+		 * First it collects every single option from GameEngine,
+		 * for each player, it will create a ComboWrapper, make an object of ComboWrapper 
+		 * to pass to the PopupPanel.
+		 * 
+		 * It then calls the GameEngine to remove the selected player. And update all views.
+		 */
+		PopupPanel popup = view.getPopupPanel();
+		try {
+			Object[] playerList = new Object[] {};
+			// Get all players from the Game Engine.
+			for(Player player: model.getAllPlayers()) {
+				ComboWrapper playerItem = new ComboWrapper(player);
+				playerList = append(playerList, playerItem);
+			}
+			// Get selected player from the PopupPanel.
+			ComboWrapper playerItemSelected = popup.removePlayer(playerList);
+			Player playerToRemove = playerItemSelected.getPlayer();
+			// Remove the player from the model.
+			if(model.removePlayer(playerToRemove) == false) {
+				throw new Exception();
+			} else {
+				popup.showSuccessfulMessage("Successfully removed " + playerToRemove.getPlayerName());
+				view.getStatusBar().showMessage(String.format("%s has left the game.", playerToRemove.getPlayerName()));
+				updateViews();
+			}
+		} catch (Exception err) {
+			popup.showErrorMessage("Player is not removed");
+			System.out.println(err);
+		}
+	}
+	
+	public void updateViews() {
+		view.getSummaryPanel().updateAllPlayers();
+		view.getToolBar().updateAllPlayers();
+	}
+	
+}

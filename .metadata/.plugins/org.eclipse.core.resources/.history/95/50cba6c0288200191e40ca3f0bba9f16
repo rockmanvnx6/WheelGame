@@ -1,0 +1,87 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+import controller.WheelResizeAction;
+import model.interfaces.GameEngine;
+import model.interfaces.Slot;
+
+public class WheelPanel extends JPanel{
+	/*
+	 * This class draws the WheelPanel and the ball panel
+	 * according to the dimension.
+	 * 
+	 * By default, the ball is 30 times smaller than the view.
+	 */
+	private static final long serialVersionUID = 1L;
+	private Slot currentSlot;
+
+	private int dimension;
+	private final int BALL_FACTOR = 30;
+	private int ballSize;
+	private BufferedImage background = getImage("./img/Basic_roulette_wheel_1024x1024.png");
+	
+	public WheelPanel(GameEngine model, MainFrame view) {
+		/* 
+		 * Constructor the height of the application as
+		 * the dimension.
+		 * 
+		 * So if the user resizes the height, it will redraw the wheel and balls.
+		 */
+		setLayout(new BorderLayout());
+		dimension = (int)view.getBounds().getHeight();
+		ballSize = dimension/BALL_FACTOR;
+		addComponentListener(new WheelResizeAction(view));
+	}
+	
+	public void setDimension(int dimension) {
+		this.dimension = dimension;
+		this.ballSize = dimension/BALL_FACTOR;
+		repaint();
+	}
+	
+	public void renderSlot(Slot slot) {
+		this.currentSlot = slot;
+		repaint();
+	}
+	
+	private int[] getRadianPosition(int index) {
+		// return x and y according to the radian.
+		double degreeUnit = (double) 360/Slot.WHEEL_SIZE;
+	
+		int x = (int) ((dimension/2 - ballSize/2) +  ((dimension/2 - ballSize) * Math.sin(Math.toRadians((index) * (degreeUnit)))));
+		int y = (int) ((dimension/2 - ballSize/2) -  ((dimension/2 - ballSize) * Math.cos(Math.toRadians((index) * (degreeUnit)))));
+		
+		int position[] = new int[] {x,y};
+		return position;
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+				
+		if(background != null) // if found file
+			g.drawImage(background, 0, 0, dimension, dimension, null);
+		
+		if(currentSlot != null) {
+			int position[] = getRadianPosition(currentSlot.getPosition());
+			g.setColor(new Color(255,255,0,200));
+			g.fillOval(position[0], position[1], ballSize, ballSize);
+		}
+	}
+	
+	private BufferedImage getImage(String imageFile) {
+		try {
+			return ImageIO.read(new File(imageFile));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+}

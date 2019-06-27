@@ -1,0 +1,18 @@
+package view;
+
+import javax.swing.JOptionPane;
+
+
+public class AddPlayerView extends JOptionPane {
+	private MainFrame view;
+	private static final long serialVersionUID = 1L;
+	
+	public AddPlayerView(MainFrame view) {
+		this.view = view;
+	}
+	
+	public void showSuccessfulMessage(String message) {
+		super.showMessageDialog(view, message, "Success", super.INFORMATION_MESSAGE);
+	}
+
+}

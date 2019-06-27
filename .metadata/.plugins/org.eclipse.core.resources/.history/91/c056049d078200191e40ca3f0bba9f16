@@ -1,0 +1,81 @@
+package view;
+
+import java.awt.BorderLayout;
+
+import javax.swing.*;
+
+import model.GameEngineImpl;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class MainFrame extends JFrame {
+	private int x = 300;
+	private int y = 300;
+	private int Fwidth = 800;
+	private int Fheight = 600;
+	private int hgap = 0;
+	private int vgap = 0;
+
+	private GameEngine model;
+	private SummaryPanel summaryPanel;
+	private WheelPanel wheelPanel;
+	private MenuBar menu;
+	private ToolBar toolBar;
+	private StatusBar statusBar;
+	private PopupPanel popup;
+
+	public MainFrame() {
+		super("Wheel Game");
+		setBounds(x, y, Fwidth, Fheight);
+		setLayout(new BorderLayout(vgap, hgap));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(true);
+
+		init();
+	}
+
+	public void init() {
+		model = new GameEngineImpl();
+		model.addGameEngineCallback(new GameEngineCallbackImpl());
+		model.addGameEngineCallback(new GameEngineCallbackGUI(this));
+
+		menu = new MenuBar(model, this);
+		summaryPanel = new SummaryPanel(model, this);
+		wheelPanel = new WheelPanel(model, this);
+		toolBar = new ToolBar(model, this);
+		statusBar = new StatusBar();
+		popup = new PopupPanel(this);
+		
+		getContentPane().add(wheelPanel, BorderLayout.CENTER);
+		getContentPane().add(summaryPanel, BorderLayout.WEST);
+		getContentPane().add(toolBar, BorderLayout.NORTH);
+		getContentPane().add(statusBar, BorderLayout.SOUTH);
+		setJMenuBar(menu);
+
+		setVisible(true);
+	}
+	
+	public PopupPanel getPopupPanel() {
+		return popup;
+	}
+
+	public SummaryPanel getSummaryPanel() {
+		return summaryPanel;
+	}
+
+	public WheelPanel getWheelPanel() {
+		return wheelPanel;
+	}
+
+	public MenuBar getMenu() {
+		return menu;
+	}
+
+	public ToolBar getToolBar() {
+		return toolBar;
+	}
+
+	public StatusBar getStatusBar() {
+		return statusBar;
+	}
+}

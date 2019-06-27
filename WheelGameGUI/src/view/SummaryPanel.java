@@ -1,0 +1,84 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class SummaryPanel extends JPanel {
+	/*
+	 * Summary Panel contains Player Panels.
+	 * Its job is to display the current players panel.
+	 * If there are too many player panels, it will add a scroll bar.
+	 */
+	private static final long serialVersionUID = 1L;
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private Dimension initialDimension;
+	private GameEngine model;
+	private Box playerHolders;
+	private JLabel title;
+	private MainFrame view;
+	
+	public SummaryPanel(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+		
+		// Size equals to 1/4 of the application view.
+		int viewWidth = (int)view.getBounds().getWidth();
+		int viewHeight = (int)view.getBounds().getHeight();
+		initialDimension = new Dimension(viewWidth/5,viewHeight);
+		setPreferredSize(initialDimension);
+
+		// Set Layout, and draw borders and background.
+		setLayout(new BorderLayout());
+		setBorder(BorderFactory.createCompoundBorder(blackBorder,new EmptyBorder(10, 10, 10, 10)));
+		setBackground(Color.WHITE);
+		
+		init();
+	}
+	
+	public void init() {
+		// Create Label.
+		title = new JLabel("Summary Panel", SwingConstants.CENTER);
+		add(title,BorderLayout.NORTH);
+		
+		// Create playerHolders
+		playerHolders = Box.createVerticalBox();
+		playerHolders.setBackground(Color.WHITE);
+		
+		// Create scroll panel
+		JScrollPane scrollPlayerHolders = new JScrollPane(playerHolders,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPlayerHolders.setPreferredSize(initialDimension);
+		scrollPlayerHolders.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		add(scrollPlayerHolders, BorderLayout.CENTER);
+		
+	}
+	
+	public void updateAllPlayers() {
+		refreshPlayerHolders();
+		for(Player player: model.getAllPlayers()) {
+			// Add a space between player and create Player Panel for each player.
+			playerHolders.add(Box.createRigidArea(new Dimension(0, 5)));
+			playerHolders.add(new PlayerPanel(player, view));
+		}
+	}
+	
+	public void refreshPlayerHolders() {
+		playerHolders.removeAll();
+		playerHolders.revalidate();
+		playerHolders.repaint();
+	}
+}

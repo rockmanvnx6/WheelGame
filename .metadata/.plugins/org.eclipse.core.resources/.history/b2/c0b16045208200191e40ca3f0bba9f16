@@ -1,0 +1,73 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class SummaryPanel extends JPanel {
+	/*
+	 * Summary Panel contains Player Panels.
+	 * Its job is to display the current players panel.
+	 * If there are too many player panels, it will add a scroll bar.
+	 */
+	private static final long serialVersionUID = 1L;
+	private int viewWidth;
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private Dimension initialDimension;
+	private GameEngine model;
+	private Box playerHolders;
+	private JLabel title;
+	private MainFrame view;
+	
+	public SummaryPanel(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+		// Set the width to be the application width / 4
+		viewWidth = (int)view.getBounds().getWidth();
+		initialDimension = new Dimension(viewWidth/4,0);
+
+		setLayout(new BorderLayout());
+		
+//		setPreferredSize(initialDimension);
+		setBorder(BorderFactory.createCompoundBorder(blackBorder,new EmptyBorder(10, 10, 10, 10)));
+		setBackground(Color.WHITE);
+		
+		init();
+	}
+	
+	public void init() {
+		title = new JLabel("Summary Panel", SwingConstants.CENTER);
+		add(title,BorderLayout.NORTH);
+		
+		playerHolders = Box.createVerticalBox();
+		playerHolders.setBackground(Color.WHITE);
+		JScrollPane as = new JScrollPane(playerHolders,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		as.setPreferredSize(initialDimension);
+		as.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		add(as, BorderLayout.CENTER);
+		
+	}
+	
+	public void updateAllPlayers() {
+		playerHolders.removeAll();
+		playerHolders.revalidate();
+		playerHolders.repaint();
+		for(Player player: model.getAllPlayers()) {
+			playerHolders.add(Box.createRigidArea(new Dimension(0, 5)));
+			playerHolders.add(new PlayerPanel(player, view));
+		}
+	}
+}

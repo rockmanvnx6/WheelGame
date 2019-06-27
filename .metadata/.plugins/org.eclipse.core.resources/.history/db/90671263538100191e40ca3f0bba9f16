@@ -1,0 +1,67 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
+import model.enumeration.BetType;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+import view.PopupPanel;
+
+public class BetAction implements ActionListener {
+	private GameEngine model;
+	private MainFrame view;
+	private SpinAction wheelSpinner;
+
+	public BetAction(GameEngine model, MainFrame view, SpinAction wheelSpinner) {
+		this.model = model;
+		this.view = view;
+		this.wheelSpinner = wheelSpinner;
+	}
+
+	public boolean checkPlayersAddBet() {
+		/* Return */
+		for (Player player : model.getAllPlayers()) {
+			if (player.getBet() <= 0) {
+				return false;
+			} else {
+				/* If at least one player has set bet */
+				view.getToolBar().enableSpin();
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		PopupPanel popup = view.getPopupPanel();
+		try {
+			BetType[] betTypes = BetType.class.getEnumConstants();
+			
+			Player currentPlayer = view.getToolBar().getCurrentPlayer();
+			if (popup.addBet(betTypes) == JOptionPane.OK_OPTION) {
+				if (model.placeBet(currentPlayer, popup.getBet(),
+						popup.getSelectedBet()) == false) {
+					throw new Exception();
+				} else {
+					popup.showSuccessfulMessage("Successfully placed bet for " + currentPlayer.getPlayerName());
+					view.getStatusBar().showMessage(String.format("%s has placed %s on %s.", 
+							currentPlayer.getPlayerName(), popup.getBet(), popup.getSelectedBet()));
+					if (checkPlayersAddBet()) {
+						wheelSpinner.spin();
+					}
+				}
+			} else {
+				popup.showErrorMessage("Cancelled set bet action");
+			}
+			view.getSummaryPanel().updateAllPlayers();
+			view.getToolBar().updateAllPlayers();
+		} catch (Exception err) {
+			popup.showErrorMessage("Cannot place bet");
+			System.out.println(err);
+		}
+	}
+
+}

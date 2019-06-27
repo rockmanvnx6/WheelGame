@@ -1,0 +1,21 @@
+package controller;
+
+import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import view.WheelPanel;
+
+public class WheelResizeAction extends ComponentAdapter{
+	private WheelPanel source;
+	
+	public WheelResizeAction(WheelPanel source) {
+		this.source = source;
+	}
+	
+	public void componentResized(ComponentEvent e) {
+		Component c = (Component)e.getSource();
+		source.setDimension(c.getHeight());
+	}
+}
+ 

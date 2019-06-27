@@ -1,0 +1,86 @@
+package view;
+
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.enumeration.BetType;
+
+
+public class PopupPanel extends JOptionPane {
+	/*
+	 * Act as the popup panel to replace JOptionPane duplication
+	 * It has basic JOption Pane functions and a few other functions to support
+	 * Remove Player, Add Player and Bet.
+	 */
+	private static final long serialVersionUID = 1L;
+	private MainFrame view;
+	private JTextField playerName;
+	private JTextField points;
+	private JTextField bet;
+	private JComboBox<BetType> typeSelector;
+	private Object[] inputFields;
+	
+	public PopupPanel(MainFrame view) {
+		this.view = view;
+	}
+	
+	@SuppressWarnings("static-access")
+	public ComboWrapper removePlayer(Object[] playerList) {
+		/*
+		 * Take a Player List from controller.RemovePlayerAction 
+		 * and return the selected player.
+		 */
+		return (ComboWrapper) this.showInputDialog(view, "Select a player to remove", 
+				"Remove player", JOptionPane.PLAIN_MESSAGE,null, playerList, null);
+	}
+	
+	public int addBet(BetType[] betTypes) {
+		/*
+		 * Show add bet panel, take list of bet types from controller.BetAction
+		 */
+		bet = new JTextField();
+		typeSelector = new JComboBox<BetType>();
+		for(BetType betType : betTypes) {
+			typeSelector.addItem(betType);
+		}
+		inputFields = new Object[]{"Please input amount of bet: ", bet, "Please select bet type: ", typeSelector};
+		return this.showDialog(inputFields);
+	}
+	public int addPlayer() {
+		playerName = new JTextField();
+		points = new JTextField();
+		inputFields = new Object[]{"Please set your name: ", playerName, "Please set your point: ", points};
+		return this.showDialog(inputFields);
+	}
+	public int getBet() {
+		return Integer.parseInt(bet.getText());
+	}
+	
+	public BetType getSelectedBet() {
+		return (BetType) typeSelector.getSelectedItem();
+	}
+	
+	public String getPlayerName() {
+		return playerName.getText();
+	}
+	
+	public int getPoints() {
+		return Integer.parseInt(points.getText());
+	}
+	
+	public int showDialog(Object[] information) {
+		return super.showConfirmDialog(view,information);
+	}
+	
+	@SuppressWarnings("static-access")
+	public void showSuccessfulMessage(String message) {
+		super.showMessageDialog(view, message, "Success", super.INFORMATION_MESSAGE);
+	}
+	
+	@SuppressWarnings("static-access")
+	public void showErrorMessage(String message) {
+		super.showMessageDialog(view, message, "Error", super.ERROR_MESSAGE);
+	}
+
+}

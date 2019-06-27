@@ -1,0 +1,27 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
+
+import model.interfaces.Player;
+import view.MainFrame;
+
+public class SelectPlayerToBetAction implements ActionListener {
+	
+	private MainFrame view;
+	
+	public SelectPlayerToBetAction(MainFrame view) {
+		this.view = view;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JComboBox<?> item = (JComboBox<?>)e.getSource();
+		
+		Player currentPlayer = (Player) item.getSelectedItem();
+		if(currentPlayer != null)  {
+			view.getToolBar().setCurrentPlayer(currentPlayer);
+		}
+	}
+
+}

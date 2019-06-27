@@ -1,0 +1,19 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import view.MainFrame;
+
+public class QuitGame implements ActionListener {
+	private MainFrame view;
+	
+	public QuitGame(MainFrame view) {
+		this.view = view;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+}

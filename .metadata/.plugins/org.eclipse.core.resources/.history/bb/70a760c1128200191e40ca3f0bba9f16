@@ -1,0 +1,39 @@
+package view;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Slot;
+import view.interfaces.GameEngineCallback;
+
+public class GameEngineCallbackGUI implements GameEngineCallback{
+	/* 
+	 * This class will call the WheelPanel to render a spinning ball
+	 * on the wheel. 
+	 * 
+	 * It also displays the status of what the wheel is doing on the status.
+	 * 
+	 */
+	private MainFrame view;
+	
+	public GameEngineCallbackGUI(MainFrame view) {
+		this.view = view;
+	}
+	@Override
+	public void nextSlot(Slot slot, GameEngine engine) {
+		view.getWheelPanel().renderSlot(slot);
+		view.getStatusBar().showMessage(String.format("Spinning...(%s, %s)", slot.getNumber(), slot.getColor()));
+	}
+
+	@Override
+	public void result(Slot winningSlot, GameEngine engine) {
+		view.getWheelPanel().renderSlot(winningSlot);
+		view.getToolBar().enableBet();
+		view.getToolBar().toggleSpinningStatus();
+		view.getSummaryPanel().updateAllPlayers();
+		view.getToolBar().updateAllPlayers();
+		view.getStatusBar().showMessage(String.format("Winning slot is (%s, %s).", winningSlot.getNumber(), winningSlot.getColor()));
+		view.getToolBar().disableSpin();
+		view.getMenu().disableSpin();
+		view.getMenu().enableAction();
+	}
+
+}

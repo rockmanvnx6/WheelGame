@@ -1,0 +1,21 @@
+package view;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+import model.interfaces.GameEngine;
+
+public class PlayerPanel extends JPanel{
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private String playerName;
+	private String playerScore;
+	private String playerBet;
+	private String playerBetType
+	public PlayerPanel(String playerName, String olayerScore, String playerBet, String playerBetType) {
+		
+	}
+
+}

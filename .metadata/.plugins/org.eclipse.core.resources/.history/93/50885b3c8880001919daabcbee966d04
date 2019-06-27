@@ -1,0 +1,48 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import model.PlayerGUI;
+import model.SimplePlayer;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+import view.MainFrame;
+
+public class AddPlayerAction implements ActionListener {
+	private MainFrame view;
+	private GameEngine model;
+	private int ID = 0;
+	
+	public AddPlayerAction(GameEngine model, MainFrame view) {
+		this.view = view;
+		this.model = model;
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		try {
+			
+			if(view.getPopupPanel().addPlayer() == JOptionPane.OK_OPTION) {
+				String playerID = String.valueOf(ID++);
+				
+				Player thisPlayer = new PlayerGUI(playerID, view.getPopupPanel().getPlayerName(), 
+						view.getPopupPanel().getPoints());
+				
+				model.addPlayer(thisPlayer);
+				view.getSummaryPanel().updateAllPlayers();
+				view.getToolBar().updateAllPlayers();
+				view.getPopupPanel().showSuccessfulMessage("Player successfully added!");
+				
+			} else {
+				view.getPopupPanel().showErrorMessage("Cancelled add player action");
+			}
+		} catch (Exception err) {
+			view.getPopupPanel().showErrorMessage("Player is not added");
+			System.out.println(err);
+		}
+	} 
+
+}

@@ -1,0 +1,100 @@
+package view;
+
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.util.Collection;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+import controller.BetAction;
+import controller.SelectPlayerToBetAction;
+import controller.SpinAction;
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class ToolBar extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private MainFrame frame;
+	private GameEngine model;
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,1,0,Color.BLACK);
+	private JComboBox<Player> selector;
+	private JButton spin;
+	private JButton bet;
+	private Player currentPlayer;
+	
+	public ToolBar(GameEngine model, MainFrame frame) {
+		this.model = model;
+		this.frame = frame;
+		init();
+		initAction();
+	}
+	
+	public void initAction() {
+		SpinAction wheelSpinner = new SpinAction(model,frame);
+		SelectPlayerToBetAction playerSelector = new SelectPlayerToBetAction(frame);
+		BetAction betAction = new BetAction(model, frame, wheelSpinner);
+		
+		spin.addActionListener(wheelSpinner);
+		selector.addActionListener(playerSelector);
+		bet.addActionListener(betAction);
+	}
+	public void init() {
+		setLayout(new GridLayout(1,3));
+		selector = new JComboBox<Player>();
+		
+		spin = new JButton("Spin");
+		add(spin);
+		
+		add(selector);
+		
+		bet = new JButton("Bet");
+		add(bet);
+		
+
+		setBackground(Color.WHITE);
+		setBorder(blackBorder);
+		disableAllButtons();
+	}
+	
+	public void setCurrentPlayer(Player player) {
+		this.currentPlayer = player;
+	}
+	
+	public Player getCurrentPlayer() {
+		return this.currentPlayer;
+	}
+	
+	public void updateAllPlayers() {
+		Collection<Player> allPlayer = model.getAllPlayers();
+		selector.removeAllItems();
+
+		if(!allPlayer.isEmpty()) {
+			enableAllButtons();
+		} else {
+			disableAllButtons();
+		}
+		
+		for(Player player: allPlayer) {
+			selector.addItem(player);
+		}
+	}
+
+	public void disableAllButtons() {
+		System.out.println("Disable");
+		spin.setEnabled(false);
+		bet.setEnabled(false);
+	}
+	
+	public void enableAllButtons() {
+		spin.setEnabled(true);
+		bet.setEnabled(true);
+	}
+	
+}

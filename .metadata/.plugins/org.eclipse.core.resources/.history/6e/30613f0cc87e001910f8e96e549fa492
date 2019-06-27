@@ -1,0 +1,9 @@
+package model;
+
+public class PlayerGUI extends SimplePlayer{
+
+	public PlayerGUI(String playerId, String playerName, int initialPoints) {
+		super(playerId, playerName, initialPoints);
+	}
+
+}

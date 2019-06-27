@@ -1,0 +1,44 @@
+package view;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class PlayerPanel extends JPanel{
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private Player player;
+	private JLabel playerId;
+	private JLabel playerName;
+	private JLabel playerScore;
+	private JLabel playerBet;
+	private JLabel playerBetType;
+
+
+	
+	public PlayerPanel(Player player) {
+		this.player = player;
+		init();
+	}
+	
+	public void init() {
+		setLayout(new GridLayout(3,1));
+		setBorder(BorderFactory.createCompoundBorder(blackBorder,new EmptyBorder(10, 10, 10, 10)));
+		setBackground(Color.WHITE);
+		
+		playerName = new JLabel(player.getPlayerName());
+		playerId = new JLabel(player.getPlayerId());
+		playerScore = new JLabel(Integer.toString(player.getPoints()));
+		playerBet = new JLabel(Integer.toString(player.getBet()));
+		playerBetType = new JLabel(player.getBetType().toString());
+		
+		add(playerName);
+	}
+
+}

@@ -1,0 +1,22 @@
+package view;
+
+import model.interfaces.Player;
+
+public class ComboWrapper {
+	private Player player;
+	
+	public ComboWrapper(Player player) {
+		this.player = player;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Player: %s | Points: %d %s", 
+		player.getPlayerName(), player.getPoints(), (player.getBetType() != null) ? 
+				"| Bet: " + player.getBet() + " | BetType: " + player.getBetType() : "| Hasn't bet");
+	}
+}

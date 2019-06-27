@@ -1,0 +1,19 @@
+package client;
+
+import javax.swing.SwingUtilities;
+
+import model.GameEngineImpl;
+import model.interfaces.GameEngine;
+import view.MainFrame;
+
+public class Driver {
+	public static void main(String[] args) {
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new MainFrame();
+			}
+		});
+	}
+}

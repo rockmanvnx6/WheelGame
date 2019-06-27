@@ -1,0 +1,62 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class StatusBar extends JPanel{
+	private GameEngine model;
+	private MainFrame view;
+	private Border blackBorder = BorderFactory.createMatteBorder(1, 0, 0, 0, Color.BLACK);
+	private JLabel player;
+	private JLabel bet;
+	private JLabel point;
+	private String playerPlaceHolder = new String("Player: ");
+	private String betPlaceHolder = new String("Bet: ");
+	private String pointPlaceHolder = new String("Point: ");
+
+	
+	public StatusBar(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+		setLayout(new GridLayout(1,3));
+		setBackground(Color.LIGHT_GRAY);
+		setBorder(blackBorder);
+	}
+	
+//	public void init() {
+//		player = new JLabel(playerPlaceHolder, JLabel.LEFT);
+//		player.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//		add(player);
+//		
+//		bet = new JLabel(betPlaceHolder, JLabel.CENTER);
+//		bet.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//		add(bet);
+//		
+//		point = new JLabel(pointPlaceHolder, JLabel.RIGHT);
+//		point.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+//		add(point);
+//	}
+//	
+//	public void resetFields() {
+//		player.setText(playerPlaceHolder);
+//		bet.setText(betPlaceHolder);
+//		point.setText(pointPlaceHolder);
+//	}
+//	
+//	public void updateCurrentPlayer() {
+//		Player currentPlayer = (Player) view.getToolBar().getCurrentPlayer();
+//		player.setText(String.format("%s #%s %s", playerPlaceHolder, currentPlayer.getPlayerId(),currentPlayer.getPlayerName()));
+//		bet.setText(String.format("%s %s - %s", betPlaceHolder, currentPlayer.getBet(), (currentPlayer.getBetType() == null) ? "Haven't set bet" : currentPlayer.getBetType()));
+//		point.setText(String.format("%s %s", pointPlaceHolder, currentPlayer.getPoints()));
+//	}
+	
+}

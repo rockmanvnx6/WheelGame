@@ -1,0 +1,73 @@
+package view;
+
+
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import controller.AddPlayerAction;
+import controller.NewGame;
+import controller.QuitGame;
+import controller.RemovePlayerAction;
+import controller.SpinAction;
+import model.interfaces.GameEngine;
+
+public class MenuBar extends JMenuBar{
+	/*
+	 * This class stores all the menu buttons and links
+	 * it to relevant action listeners. 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JMenu actionMenu;
+	private JMenu game;
+	private JMenuItem spin;
+	private JMenuItem newPlayer;
+	private JMenuItem removePlayer;
+	private JMenuItem newGame;
+	private JMenuItem quit;
+	
+	public MenuBar(GameEngine model, MainFrame frame) {
+		// Initialize menu
+		actionMenu = new JMenu("Action");
+		game = new JMenu("Game");
+		// Initialize menu items
+		newPlayer = new JMenuItem("Add New Player");
+		removePlayer = new JMenuItem("Remove Existing Player");
+		spin = new JMenuItem("Spin");
+		newGame = new JMenuItem("New Game");
+		quit = new JMenuItem("Quit");
+		// Add relevant listener for menu items
+		newPlayer.addActionListener(new AddPlayerAction(model, frame));
+		removePlayer.addActionListener(new RemovePlayerAction(model, frame));
+		newGame.addActionListener(new NewGame(frame));
+		spin.addActionListener(new SpinAction(model, frame));
+		quit.addActionListener(new QuitGame());
+		// Add items into "Action" menu
+		actionMenu.add(newPlayer);
+		actionMenu.add(removePlayer);
+		actionMenu.add(spin);
+		// Add items into "Game" menu
+		game.add(newGame);		
+		game.add(quit);
+		
+		add(game);
+		add(actionMenu);
+		
+		disableSpin();
+	}	
+	
+	public void disableAction() {
+		actionMenu.setEnabled(false);
+	}
+	
+	public void enableAction() {
+		actionMenu.setEnabled(true);
+	}
+	
+	public void disableSpin() {
+		spin.setEnabled(false);
+	}
+	
+	public void enableSpin() {
+		spin.setEnabled(true);
+	}
+}

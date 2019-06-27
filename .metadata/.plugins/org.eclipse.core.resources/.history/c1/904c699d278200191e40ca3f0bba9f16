@@ -1,0 +1,60 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import model.interfaces.GameEngine;
+import view.MainFrame;
+
+public class SpinAction implements ActionListener{
+	/*
+	 * This class manages the spin action, It will call the 
+	 * Game Engine to spin, as well as disable the buttons from
+	 * "Action" menu and tool bar.
+	 */
+	private GameEngine model;
+	private MainFrame view;
+	
+	public SpinAction(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+	}
+	
+	public void spin() {
+		// Disable all the buttons as well as update tool bar state.
+		view.getToolBar().disableAllButtons();
+		view.getToolBar().toggleSpinningStatus();
+		view.getMenu().disableAction();
+		
+		// Call Game Engine to spin in a separated thread to synchronize.
+		new Thread() {
+			@Override
+			public void run() {
+				model.spin(1, 200, 4);
+			}
+		}.start();
+	}
+	
+	public void disableSpinButtons() {
+		/*
+		 * This function will disable every spin buttons
+		 * in the application.
+		 */
+		view.getToolBar().disableSpin();
+		view.getMenu().disableSpin();
+	}
+	
+	public void enableSpinButtons() {
+		/*
+		 * This function will enable every spin buttons
+		 * in the application.
+		 */
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		spin();
+	}
+
+}

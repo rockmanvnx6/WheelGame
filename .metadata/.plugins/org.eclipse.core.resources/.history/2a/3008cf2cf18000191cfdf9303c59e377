@@ -1,0 +1,15 @@
+package model;
+
+public class PlayerGUI extends SimplePlayer{
+
+	public PlayerGUI(String playerId, String playerName, int initialPoints) {
+		super(playerId, playerName, initialPoints);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Player: %s | Points: %d %s", 
+				super.getPlayerName(), super.getPoints(), (super.getBetType() != null) ? 
+						"| Bet: " + super.getBet() + " | BetType: " + super.getBetType() : "| Hasn't bet");
+	}
+}

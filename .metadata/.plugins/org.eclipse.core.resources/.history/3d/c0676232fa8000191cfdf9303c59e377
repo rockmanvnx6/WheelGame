@@ -1,0 +1,29 @@
+package view;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Slot;
+import view.interfaces.GameEngineCallback;
+
+public class GameEngineCallbackGUI implements GameEngineCallback{
+	
+	private MainFrame view;
+	
+	public GameEngineCallbackGUI(MainFrame view) {
+		this.view = view;
+	}
+	@Override
+	public void nextSlot(Slot slot, GameEngine engine) {
+		view.getWheelPanel().renderSlot(slot);
+	}
+
+	@Override
+	public void result(Slot winningSlot, GameEngine engine) {
+		view.getWheelPanel().renderSlot(winningSlot);
+		view.getToolBar().enableAllButtons();
+		view.getToolBar().toggleSpinningStatus();
+		view.getSummaryPanel().updateAllPlayers();
+		view.getToolBar().updateAllPlayers();
+		view.getStatusBar().updateCurrentPlayer();
+	}
+
+}

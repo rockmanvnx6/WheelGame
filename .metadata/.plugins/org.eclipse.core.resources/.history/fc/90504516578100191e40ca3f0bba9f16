@@ -1,0 +1,13 @@
+package view;
+
+import model.interfaces.Player;
+
+public class ComboWrapper {
+	private Player player;
+	private String playerDisplay;
+	
+	public ComboWrapper(Player player, String playerDisplay) {
+		this.player = player;
+		this.playerDisplay = playerDisplay;
+	}
+}

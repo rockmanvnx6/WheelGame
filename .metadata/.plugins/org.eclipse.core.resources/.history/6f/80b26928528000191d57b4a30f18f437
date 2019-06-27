@@ -1,0 +1,26 @@
+package view;
+
+import javax.swing.JOptionPane;
+
+
+public class PopupPanel extends JOptionPane {
+	private MainFrame view;
+	private static final long serialVersionUID = 1L;
+	
+	public PopupPanel(MainFrame view) {
+		this.view = view;
+	}
+	
+	public void showDialog(Object[] information) {
+		super.showConfirmDialog(view,information);
+	}
+	
+	public void showSuccessfulMessage(String message) {
+		super.showMessageDialog(view, message, "Success", super.INFORMATION_MESSAGE);
+	}
+	
+	public  void showErrorMessage(String message) {
+		super.showMessageDialog(view, message, "Error", super.ERROR_MESSAGE);
+	}
+
+}

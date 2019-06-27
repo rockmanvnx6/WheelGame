@@ -1,0 +1,85 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.util.Collection;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
+import model.interfaces.GameEngine;
+import model.interfaces.Player;
+
+public class SummaryPanel extends JPanel {
+	private int viewWidth;
+	private Border blackBorder = BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK);
+	private Dimension initialDimension;
+	private GameEngine model;
+	private JPanel playerHolders;
+	private JLabel title;
+	private MainFrame view;
+	
+	public SummaryPanel(GameEngine model, MainFrame view) {
+		this.model = model;
+		this.view = view;
+		viewWidth = (int)view.getBounds().getWidth();
+
+		setLayout(new BorderLayout());
+		initialDimension = new Dimension(viewWidth/4,0);
+		
+		setPreferredSize(initialDimension);
+		setBorder(BorderFactory.createCompoundBorder(blackBorder,new EmptyBorder(10, 10, 10, 10)));
+		setBackground(Color.WHITE);
+		
+		init();
+	}
+	
+	public void init() {
+		title = new JLabel("Summary Panel", SwingConstants.CENTER);
+		add(title,BorderLayout.NORTH);
+		
+		playerHolders = new JPanel();
+//		playerHolders.setLayout(new BoxLayout(playerHolders,BoxLayout.Y_AXIS));
+		playerHolders.setBackground(Color.YELLOW);
+		add(playerHolders, BorderLayout.CENTER);
+	}
+	
+	public void updateAllPlayers() {
+		playerHolders.removeAll();
+		playerHolders.revalidate();
+		playerHolders.repaint();
+		System.out.println("removed");
+		for(Player player: model.getAllPlayers()) {
+			playerHolders.add(new PlayerPanel(player, view));
+		}
+	}
+	
+//	public void init() {
+//		JLabel title = new JLabel("Summary Panel", SwingConstants.CENTER);
+//		add(title, BorderLayout.NORTH);
+//		
+//		playerInfo = new JTextArea();
+//		playerInfo.setEditable(false);
+//		add(playerInfo, BorderLayout.CENTER);
+//	}
+//
+//	
+//
+//	public void updateAllPlayers() {
+//		String playerDetail = "";
+//		for(Player player: model.getAllPlayers()) {
+//			playerDetail += String.format("#%s %s [%d]\n", player.getPlayerId(),
+//					player.getPlayerName(), player.getPoints());
+//		}
+//		playerInfo.setText(playerDetail);
+//	}
+//	
+}
